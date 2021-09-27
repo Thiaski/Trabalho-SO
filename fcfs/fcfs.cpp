@@ -104,15 +104,3 @@ int main(int argc, char const *argv[]){
 
 	return 0;
 }
-
-
-
-
-/*
-p1:	0 2 2 2 2
-p2:	0 0 1 1 1 2 2 2 2 2 2 2 2 2
-p3:	0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2
-
-Waiting Time = anterior("Tempo de Ingresso" + Tempo de Duração + "Waiting Time") - "Tempo de Ingresso"
-Turnaround = "Waiting Time" + "Tempo de Duração"
-*/
