@@ -9,7 +9,7 @@
 using namespace std;
 
 struct TESTES{
-	int processos;
+	int processos;						//Quantidade de processos do teste
 	int tempoDeIngresso[MAX_PROCESSOS];
 	int tempoDeDuracao[MAX_PROCESSOS];
 };
@@ -54,18 +54,33 @@ void medio(int x){
 
 	for (int i = 0; i < x; i++){
 		cout << "Teste: " << i+1 << endl;
-		int mwt = 0, mtar = 0;
-		int awt = 0, ati = TESTES[i].tempoDeIngresso[0], atd = 0;
-		for (int j = 0; j < TESTES[i].processos; j++){
-			int actualWt = (awt + ati + atd) - TESTES[i].tempoDeIngresso[j];
-			int actualTar = actualWt + TESTES[i].tempoDeDuracao[j];
+		
+		/*mwt, mtar são respectivamente a Média de Tempo de Espera e Média de Turnaround. Eles irão acumular o tempo de espera e
+		turnaround de todos os processos antes de ser calculado a média depois
+		awt é o tempo de espera do processo anterior
+		actualWT e actualTar são respectivamente o tempo de espera e o turnaround do processo que está sendo analizado*/
+
+		int mwt = 0, mtar = 0, awt = 0;
+
+		int actualWt = 0;
+		int actualTar = actualWt + TESTES[i].tempoDeDuracao[0];
+		mwt += actualWt;
+		mtar += actualTar;
+		
+		awt = actualWt;
+		
+		cout << "Processo: " << 1 << endl;
+		cout << "----Waiting Time: " << actualWt << endl;
+		cout << "----Turnaround: " << actualTar << endl;
+
+		for (int j = 1; j < TESTES[i].processos; j++){
+			actualWt = (awt + TESTES[i].tempoDeIngresso[j-1] + TESTES[i].tempoDeDuracao[j]) - TESTES[i].tempoDeIngresso[j];
+			actualTar = actualWt + TESTES[i].tempoDeDuracao[j];
 			mwt += actualWt;
 			mtar += actualTar;
 			
 			awt = actualWt;
-			ati = TESTES[i].tempoDeIngresso[j];
-			atd = TESTES[i].tempoDeDuracao[j];
-			
+						
 			cout << "Processo: " << j+1 << endl;
 			cout << "----Waiting Time: " << actualWt << endl;
 			cout << "----Turnaround: " << actualTar << endl;
@@ -82,6 +97,11 @@ int main(int argc, char const *argv[]){
 	file.open("input.txt");
 	int quant = 0, processo = 0, teste = -1;
 	string s;
+
+	/*quant é um contador que irá registar a quantidade de processos de cada teste///
+	processo é um contador que irá contar quantos processos foram registrados///
+	teste é um contador que irá contar quantos testes foram registrados. Começa com -1 pois irá incrementar para 0 no primeiro teste
+	e incrementará mais uma vez após o ultimo teste*/
 
 	while(getline(file, s)){	
 		cout << s << endl;

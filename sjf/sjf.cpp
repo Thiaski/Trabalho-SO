@@ -55,20 +55,22 @@ void medio(int x){
 
 		int temp, val, completition[MAX_PROCESSOS], turnaround[MAX_PROCESSOS], waiting[MAX_PROCESSOS];
 
-		completition[0] = TESTES[t].tempoDeIngresso[0] + TESTES[t].tempoDeDuracao[0];
-		turnaround[0] = completition[0] - TESTES[t].tempoDeIngresso[0];
-		waiting[0] = turnaround[0] - TESTES[t].tempoDeDuracao[0];
+		completition[0] = TESTES[t].tempoDeIngresso[0] + TESTES[t].tempoDeDuracao[0];	//O tempo em que o processo é concluido
+		turnaround[0] = completition[0] - TESTES[t].tempoDeIngresso[0];					//Turnaround do processos
+		waiting[0] = turnaround[0] - TESTES[t].tempoDeDuracao[0];						//Tempo de espera do processo
 
 		cout << "Processo: 1 - " << TESTES[t].tempoDeIngresso[0] << " " << TESTES[t].tempoDeDuracao[0] << endl;
 		cout << "Waiting Time: " << waiting[0] << endl;
 		cout << "Turnaround: " << turnaround[0] << endl;
 		cout << "-----------------\n" << endl;
 
-		for (int i = 1; i < TESTES[t].processos; i++){
-			temp = turnaround[i-1];
-			int menor = TESTES[t].tempoDeDuracao[i];
+		for (int i = 1; i < TESTES[t].processos; i++){	//Observe que o loop começa a partir do segundo processo, pois o primeiro ja foi analizado anteriormente
+			temp = turnaround[i-1];		//temp recebe o turnaround do processo anterior
+			int menor = TESTES[t].tempoDeDuracao[i];	//menor recebe o tempo de duração do processo atual
 			for (int j = i; j < TESTES[t].processos; j++){
-				if (temp >= TESTES[t].tempoDeIngresso[j] && menor >= TESTES[t].tempoDeDuracao[j]){
+				/*Aqui o loop irá procurar pelo processo com menor tempo de duração que ja tenha 
+				entrado na fila antes do processo em execução ser concluido*/
+				if (temp >= TESTES[t].tempoDeIngresso[j] && menor >= TESTES[t].tempoDeDuracao[j]){ 
 					menor = TESTES[t].tempoDeDuracao[j];
 					val = j;
 				}
@@ -83,7 +85,10 @@ void medio(int x){
 			swap(&turnaround[val], &turnaround[i]);
 			swap(&waiting[val], &waiting[i]);
 
-			cout << "Processo: " << i << " - " << TESTES[t].tempoDeIngresso[i] << " " << TESTES[t].tempoDeDuracao[i] << endl;
+			/*Será então calculado o completition time, turnaround e tempo de espera do processo mais curto encontrado
+			e ele será colocado na ordem apropriada na fila*/
+
+			cout << "Processo: " << val+2 << " - " << TESTES[t].tempoDeIngresso[i] << " " << TESTES[t].tempoDeDuracao[i] << endl;
 			cout << "Waiting Time: " << waiting[i] << endl;
 			cout << "Turnaround: " << turnaround[i] << endl;
 			cout << "-----------------\n" << endl;
@@ -106,6 +111,11 @@ int main(int argc, char const *argv[]){
 	file.open("input.txt");
 	int quant = 0, processo = 0, teste = -1;
 	string s;
+
+	/*quant é um contador que irá registar a quantidade de processos de cada teste///
+	processo é um contador que irá contar quantos processos foram registrados///
+	teste é um contador que irá contar quantos testes foram registrados. Começa com -1 pois irá incrementar para 0 no primeiro teste
+	e incrementará mais uma vez após o ultimo teste*/
 
 	while(getline(file, s)){	
 		cout << s << endl;
